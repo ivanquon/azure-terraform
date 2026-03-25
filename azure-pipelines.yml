@@ -1,19 +1,38 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
   - main
 
 pool:
   name: default
 
-steps:
-  - script: echo Hello, world!
-    displayName: "Run a one-line script"
-
-  - script: |
-      echo Add other tasks to build, test, and deploy your project.
-      echo See https://aka.ms/yaml
-    displayName: "Run a multi-line script"
+stages:
+  - stage: Init
+    displayName: "Init Stage"
+    jobs:
+      - job: Init
+        steps:
+          - script: echo "Initializing Terraform files"
+            displayName: "Iniitalize"
+      - job: Validate
+        steps:
+          - script: echo "Validating Terraform files"
+            displayName: "Validate"
+  - stage: Plan and Apply
+    displayName: "Plan and Apply"
+    dependsOn: Init
+    condition: succeeded()
+    jobs:
+      - job: Plan
+        steps:
+          - script: echo "Running Terraform plan"
+            displayName: "Terraform plan"
+      - job: Apply
+        steps:
+          - script: echo "Running Terraform apply"
+            displayName: "Terraform apply"
+  - stage: Destroy
+    displayName: "Destroy Remaining Resources"
+    jobs:
+      - job: Destroy
+        steps:
+          - script: echo "Running Terraform destroy"
+            displayName: "Terraform Destroy"

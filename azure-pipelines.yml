@@ -13,6 +13,7 @@ stages:
           - script: echo "Initializing Terraform files"
             displayName: "Iniitalize"
       - job: Validate
+        dependsOn: Init
         steps:
           - script: echo "Validating Terraform files"
             displayName: "Validate"
@@ -26,7 +27,12 @@ stages:
           - script: echo "Running Terraform plan"
             displayName: "Terraform plan"
       - job: Apply
+        dependsOn: Plan
         steps:
+          - task: ManualValidation@0
+            inputs:
+              notifyUsers: ""
+              instructions: "Please validate the build before continuing."
           - script: echo "Running Terraform apply"
             displayName: "Terraform apply"
   - stage: Destroy

@@ -16,7 +16,7 @@ stages:
         steps:
           - script: echo "Validating Terraform files"
             displayName: "Validate"
-  - stage: Plan and Apply
+  - stage: Plan_and_Apply
     displayName: "Plan and Apply"
     dependsOn: Init
     condition: succeeded()
